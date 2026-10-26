@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pratinjau kuis</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<main class="wrap narrow" style="padding-top:20px">
+  <h1>Pratinjau kuis</h1>
+  <p class="lead">Halaman uji: semua soal (atau <code>?t=2</code> untuk satu topik) dengan papan, opsi, kunci, dan pembahasan.</p>
+  <div id="out"></div>
+</main>
+<script src="../solver.js"></script>
+<script src="../render.js"></script>
+<script>window.QUESTIONS = [];</script>
+<script src="../data/t1_decision_analysis.js"></script>
+<script src="../data/t2_ahp.js"></script>
+<script src="../data/t3_transportasi.js"></script>
+<script src="../data/t4_assignment.js"></script>
+<script>
+var t = +((location.search.match(/t=(\d)/) || [])[1] || 0), esc = RENDER.esc, h = "";
+QUESTIONS.filter(function (q) { return !t || q.topic === t; }).forEach(function (q) {
+  h += '<div class="card"><div class="meta"><span class="chip id">' + q.id + '</span><span class="chip">' + q.level + '</span><span class="chip">' + q.src + "</span></div>" +
+    (q.ctx ? '<div class="ctx"><div class="ctx-title">' + esc(q.ctxTitle || "Kasus") + '</div><div class="ctx-body">' + esc(q.ctx) + "</div></div>" : "") +
+    (q.papan ? '<div class="qfig"><div class="board">' + RENDER.papan(q.papan) + "</div></div>" : "") +
+    '<p class="qtext">' + esc(q.q) + '</p><div class="opts">' +
+    q.options.map(function (o, i) { return '<div class="opt' + (i === q.answer ? " correct" : "") + '"><span class="letter">' + "ABCD"[i] + '</span><span class="otext">' + esc(o) + "</span></div>"; }).join("") +
+    '</div><div class="feedback ok"><p>' + esc(q.explain) + "</p></div></div>";
+});
+document.getElementById("out").innerHTML = h;
+requestAnimationFrame(function () { RENDER.drawJalur(document.body); });
+</script>
+</body>
+</html>

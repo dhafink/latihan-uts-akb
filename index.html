@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan UTS AKB</title>
+<meta name="description" content="Modul, video, pembahasan soal, kuis, dan latihan hitung Analisa Kuantitatif Bisnis: Decision Analysis, AHP, Transportasi, Assignment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=1">
+<script>try{var t=localStorage.getItem("akbKuis.theme");if(t)document.documentElement.setAttribute("data-theme",JSON.parse(t));}catch(e){}</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <a class="brand" href="#beranda">
+        <div class="logo">AKB</div>
+        <div><div class="t">Latihan UTS AKB</div><div class="s">Analisa Kuantitatif Bisnis · UNPAR</div></div>
+      </a>
+      <button class="icon-btn" id="themeBtn" type="button" title="Ganti tema papan / kertas">◐ <span id="themeLbl">Kertas</span></button>
+    </div>
+    <nav class="menu" id="menu" aria-label="Menu utama">
+      <a href="#beranda" data-r="beranda">Beranda</a>
+      <a href="#modul" data-r="modul">Modul</a>
+      <a href="#video" data-r="video">Video</a>
+      <a href="#pembahasan" data-r="pembahasan">Pembahasan Soal Dosen</a>
+      <a href="#kuis" data-r="kuis">Kuis</a>
+      <a href="#hitung" data-r="hitung">Latihan Hitung</a>
+      <a href="#kalkulator" data-r="kalkulator">Kalkulator</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="app" tabindex="-1"></main>
+
+<footer>
+  Ada langkah atau soal yang membingungkan? Catat <strong>ID-nya</strong> (mis. <strong>T3-07</strong>, <strong>H2-01</strong>, atau nama subbab) untuk didiskusikan bersama.<br>
+  Bahan latihan, bukan bocoran soal ujian. Tetap cocokkan dengan materi kuliah.
+</footer>
+
+<template id="tpl-kuis">
+  <section id="home">
+    <h1>Kuis pilihan ganda</h1>
+    <p class="lead" id="totalInfo"></p>
+    <div class="card resume" id="resumeBox" hidden>
+      <div><div class="r-title">Lanjutkan sesi terakhir?</div><div class="small muted" id="resumeInfo"></div></div>
+      <div class="r-actions">
+        <button class="btn ghost" id="discardBtn" type="button">Buang</button>
+        <button class="btn primary" id="resumeBtn" type="button">Lanjutkan →</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row-head">
+        <h2>1. Pilih topik</h2>
+        <div class="links"><button class="link" id="allBtn" type="button">Pilih semua</button><button class="link" id="noneBtn" type="button">Kosongkan</button></div>
+      </div>
+      <div class="topics" id="topicGrid"></div>
+    </div>
+    <div class="card">
+      <h2>2. Atur sesi</h2>
+      <div class="settings">
+        <div class="setting">
+          <label for="countSel">Jumlah soal</label>
+          <select id="countSel">
+            <option value="10">10 soal</option><option value="15">15 soal</option><option value="20">20 soal</option>
+            <option value="30">30 soal</option><option value="50">50 soal</option><option value="all">Semua soal</option>
+          </select>
+        </div>
+        <div class="setting">
+          <label for="shuffleChk">Acak urutan soal<span class="hint">Jika mati, soal tampil berurutan per topik.</span></label>
+          <span class="switch"><input type="checkbox" id="shuffleChk"><span></span></span>
+        </div>
+        <div class="setting">
+          <label for="onlyWrongChk">Hanya soal yang terakhir dijawab salah <span id="wrongCount" class="muted small"></span><span class="hint">Cocok untuk mengulang materi yang belum dikuasai.</span></label>
+          <span class="switch"><input type="checkbox" id="onlyWrongChk"><span></span></span>
+        </div>
+      </div>
+      <div class="start-row">
+        <span class="small muted" id="startInfo"></span>
+        <button class="btn primary" id="startBtn" type="button">Mulai kuis →</button>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:16px">Riwayat jawaban tersimpan di browser ini. <button class="link" id="resetStatsBtn" type="button">Hapus riwayat</button></p>
+  </section>
+
+  <section id="quiz" hidden>
+    <div class="qbar">
+      <span class="pos" id="qPos"></span>
+      <span class="score" id="qScore"></span>
+      <button class="btn ghost sm" id="exitBtn" type="button">✕ Keluar</button>
+    </div>
+    <div class="progress"><div id="bar"></div></div>
+    <div class="card">
+      <div class="meta" id="qMeta"></div>
+      <div class="ctx" id="qCtx" hidden></div>
+      <div class="qfig" id="qFig" hidden></div>
+      <p class="qtext" id="qText"></p>
+      <div class="opts" id="opts"></div>
+      <div class="feedback" id="feedback" hidden></div>
+      <div class="qnav">
+        <button class="btn ghost" id="prevBtn" type="button">← Sebelumnya</button>
+        <button class="btn primary" id="nextBtn" type="button" hidden>Lanjut →</button>
+      </div>
+    </div>
+    <div class="kbd-hint">Shortcut: <kbd>1</kbd>–<kbd>4</kbd> atau <kbd>A</kbd>–<kbd>D</kbd> untuk memilih · <kbd>Enter</kbd> lanjut · <kbd>←</kbd> sebelumnya</div>
+  </section>
+
+  <section id="result" hidden>
+    <div class="card">
+      <div class="score-hero">
+        <div class="ring" id="ring"><div id="resScore">0%</div></div>
+        <div><h1 style="margin-bottom:2px">Hasil latihan</h1><div class="muted" id="resDetail"></div><p id="resMsg" style="margin:8px 0 0"></p></div>
+      </div>
+      <div class="fun" id="funBox" hidden><div class="bubble" aria-live="polite"><span id="funText"></span><span class="caret" id="funCaret"></span></div></div>
+      <div class="res-actions">
+        <button class="btn primary" id="retryWrongBtn" type="button">Ulangi yang salah</button>
+        <button class="btn" id="retrySameBtn" type="button">Ulangi sesi ini</button>
+        <button class="btn ghost" id="homeBtn" type="button">Kembali ke pengaturan kuis</button>
+      </div>
+    </div>
+    <div class="card"><h2>Skor per topik</h2><div id="resTopics"></div></div>
+    <div class="card"><h2 id="wrongHead">Soal yang salah</h2><div id="wrongList"></div></div>
+  </section>
+</template>
+
+<script src="solver.js?v=1"></script>
+<script src="render.js?v=1"></script>
+<script src="player.js?v=1"></script>
+<script>window.MODUL = []; window.PEMBAHASAN = []; window.HITUNG = []; window.QUESTIONS = []; window.VIDEOS = [];</script>
+<script src="modul/t1_decision_analysis.js?v=1"></script>
+<script src="modul/t2_ahp.js?v=1"></script>
+<script src="modul/t3_transportasi.js?v=1"></script>
+<script src="modul/t4_assignment.js?v=1"></script>
+<script src="modul/rumus.js?v=1"></script>
+<script src="data/video.js?v=1"></script>
+<script src="data/pembahasan.js?v=1"></script>
+<script src="data/hitung_t1.js?v=1"></script>
+<script src="data/hitung_t2.js?v=1"></script>
+<script src="data/hitung_t3.js?v=1"></script>
+<script src="data/hitung_t4.js?v=1"></script>
+<script src="data/t1_decision_analysis.js?v=1"></script>
+<script src="data/t2_ahp.js?v=1"></script>
+<script src="data/t3_transportasi.js?v=1"></script>
+<script src="data/t4_assignment.js?v=1"></script>
+<script src="kalkulator.js?v=1"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>

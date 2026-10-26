@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pratinjau langkah solver</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Kalam:wght@400;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<main class="wrap" style="padding-top:20px">
+  <h1>Pratinjau langkah solver</h1>
+  <p class="lead">Halaman uji: semua langkah setiap contoh ditampilkan berurutan. Pilih contoh lewat <code>?c=nama</code>.</p>
+  <div id="out"></div>
+</main>
+<script src="../solver.js"></script>
+<script src="../render.js"></script>
+<script src="../player.js"></script>
+<script>
+var C = {
+  exec: { metode: "tp", data: { sumber: [{ nama: "Des Moines", kode: "D", supply: 100 }, { nama: "Evansville", kode: "E", supply: 300 }, { nama: "Fort Lauderdale", kode: "F", supply: 300 }],
+    tujuan: [{ nama: "Albuquerque", kode: "A", demand: 300 }, { nama: "Boston", kode: "B", demand: 200 }, { nama: "Cleveland", kode: "C", demand: 200 }], biaya: [[5, 4, 3], [8, 4, 3], [9, 7, 5]], goal: "min", satuan: "$" }, opsi: { awal: "nwc", evaluasi: "stepping" } },
+  modi: { metode: "tp", data: null, opsi: { awal: "nwc", evaluasi: "modi" } },
+  vam: { metode: "tp", data: null, opsi: { awal: "vam", evaluasi: "modi" } },
+  fix: { metode: "asg", data: { baris: ["Adams", "Brown", "Cooper"], kolom: ["Proyek 1", "Proyek 2", "Proyek 3"], nilai: [[11, 14, 6], [8, 10, 11], [9, 12, 7]], goal: "min", satuan: "$", labelBaris: "Pekerja", labelKolom: "Proyek" } },
+  tugas2: { metode: "asg", data: { baris: ["Susy", "Katie", "Brando", "Elina", "Vlad"], kolom: ["Kebun 1", "Kebun 2", "Kebun 3", "Kebun 4"], nilai: [[81, 97, 89, 90], [72, 89, 77, 63], [92, 105, 89, 84], ["M", 76, 68, 90], [92, 101, 89, 86]], goal: "max", satuan: "kg", labelBaris: "Kandidat", labelKolom: "Kebun" } },
+  survei: { metode: "da-survei", data: { alt: ["Pabrik besar", "Pabrik kecil", "Tidak membangun"], state: ["Pasar baik", "Pasar buruk"], payoff: [[200000, -180000], [100000, -20000], [0, 0]], satuan: "$", goal: "max", prior: [0.5, 0.5],
+    survei: { label: "Survei", biaya: 10000, hasil: ["Survei positif", "Survei negatif"], likelihood: [[0.7, 0.3], [0.2, 0.8]], bulat: 2 } } },
+  sens: { metode: "da-sensitivitas", data: { alt: ["Pabrik besar", "Pabrik kecil", "Tidak membangun"], state: ["Pasar baik", "Pasar buruk"], payoff: [[200000, -180000], [100000, -20000], [0, 0]], satuan: "$", goal: "max" } },
+  ahp: { metode: "ahp-matriks", data: { judul: "Kriteria", item: ["Harga", "MPG", "Kenyamanan", "Gaya"], matriks: [[1, 3, 2, 2], [null, 1, 0.25, 0.25], [null, 4, 1, 0.5], [null, 4, 2, 1]] } },
+  ketidakpastian: { metode: "da-ketidakpastian", data: { alt: ["Pabrik besar", "Pabrik kecil", "Tidak membangun"], state: ["Pasar baik", "Pasar buruk"], payoff: [[200000, -180000], [100000, -20000], [0, 0]], satuan: "$", goal: "max", alpha: 0.8 } }
+};
+C.modi.data = C.exec.data; C.vam.data = C.exec.data;
+var name = (location.search.match(/c=([\w-]+)/) || [])[1] || "exec";
+var c = C[name], r = SOLVER.jalankan(c.metode, c.data, c.opsi);
+PLAYER.mount(document.getElementById("out"), r.steps, { semua: true });
+</script>
+</body>
+</html>

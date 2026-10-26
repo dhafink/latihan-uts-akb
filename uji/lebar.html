@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="id">
+<head><meta charset="utf-8"><title>Cek lebar HP</title>
+<style>body{font:14px/1.4 monospace;margin:0;display:flex;gap:12px}iframe{width:390px;height:800px;border:1px solid #888;flex:none}pre{white-space:pre-wrap;margin:8px}</style></head>
+<body>
+<iframe id="f"></iframe><pre id="o">memuat…</pre>
+<script>
+// Halaman uji: cari elemen yang lebih lebar dari layar HP (390 px). Pakai ?h=modul/tp/stepping
+var h = (location.search.match(/h=([^&]+)/) || [])[1] || "modul/tp/stepping";
+var f = document.getElementById("f");
+f.src = "../index.html#" + decodeURIComponent(h);
+f.onload = function () {
+  setTimeout(function () {
+    var d = f.contentDocument, W = d.documentElement.clientWidth, out = ["lebar layar: " + W, "scrollWidth body: " + d.body.scrollWidth];
+    Array.prototype.forEach.call(d.querySelectorAll("body *"), function (e) {
+      var r = e.getBoundingClientRect();
+      if (r.right > W + 1 && r.width > 0) {
+        var p = e.parentElement, pr = p.getBoundingClientRect();
+        if (pr.right <= W + 1 || p === d.body) out.push(e.tagName.toLowerCase() + "." + String(e.className).replace(/\s+/g, ".") + "  right=" + Math.round(r.right) + " w=" + Math.round(r.width));
+      }
+    });
+    document.getElementById("o").textContent = out.join("\n");
+  }, 2500);
+};
+</script>
+</body>
+</html>

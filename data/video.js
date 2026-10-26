@@ -24,7 +24,7 @@ window.VIDEOS.push(
   { id: "v08", topik: 3, modul: "tp/khusus", ada: false, file: "video/v08.mp4", poster: "video/v08.jpg",
     judul: "Transportasi 3: kasus khusus", ringkas: "Dummy, degenerasi, solusi optimal ganda, rute terlarang, dan maksimasi.",
     isi: ["Supply ≠ demand → dummy", "Degenerasi → angka 0", "Index 0 → optimal ganda", "Rute terlarang → M", "Maksimasi profit"] },
-  { id: "v09", topik: 4, modul: "asg/hungarian", ada: false, file: "video/v09.mp4", poster: "video/v09.jpg",
+  { id: "v09", topik: 4, modul: "asg/hungarian", ada: true, durasi: "2:59", file: "video/v09.mp4", poster: "video/v09.jpg",
     judul: "Assignment 1: Metode Hungarian", ringkas: "Reduksi baris dan kolom, menarik garis minimum, revisi tabel, dan penempatan akhir.",
     isi: ["Reduksi baris", "Reduksi kolom", "Tes garis", "Revisi", "Penempatan di sel nol"] },
   { id: "v10", topik: 4, modul: "asg/khusus", ada: false, file: "video/v10.mp4", poster: "video/v10.jpg",
